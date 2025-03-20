@@ -1,9 +1,9 @@
 services:
   db:
-    image: postgres:latest
+    image: postgres:17
     restart: always
     ports:
-      - "${APP_PORT}:5432"
+      - "${DB_EXTERNAL_PORT}:5432" # Map host port 5432 to container port 5432
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -12,6 +12,17 @@ services:
       - db_data:/var/lib/postgresql/data
     networks:
       - app_network
+
+  # app: # Add your Rust application service
+  #   # build: . # Assumes Dockerfile in current directory
+  #   ports:
+  #     - "${APP_PORT}:8080" # Map host port 8080 to app's internal port
+  #   environment:
+  #     - DATABASE_URL=${DATABASE_URL}
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - app_network
 
 volumes:
   db_data:
